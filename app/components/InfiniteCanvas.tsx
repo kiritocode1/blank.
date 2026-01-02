@@ -9,14 +9,13 @@ const FONT_HEIGHT = 12
 const FONT_WIDTH = 6
 const STORE_TEXT = 'blank-editor'
 const STORE_CURSOR = 'blank-editor-cursor'
-const LIGHT_TRIGGER = 'let there be light'
 
 const DEFAULT_VALUE = `
    blank.
 `
 
 const DEFAULT_CONFIG = () => ({
-    schema: 'dark' as string,
+    schema: null as string | null,
     font: 'Geist Mono',
     size: '14',
 })
@@ -39,10 +38,6 @@ function fill(text: string): string {
     }
 
     return result.join(EOL)
-}
-
-function hasLightTrigger(value: string): boolean {
-    return value.toLowerCase().includes(LIGHT_TRIGGER)
 }
 
 function getLastMatch(value: string, re: RegExp): string | null {
@@ -124,12 +119,19 @@ export default function InfiniteCanvas() {
             cm.setSelections(selections)
         }
 
+        function getSystemSchema(): string {
+            return window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light'
+        }
+
         function readConfigs(value?: string) {
             const text = value ?? cm.getValue()
             configs = DEFAULT_CONFIG()
 
-            // "let there be light" triggers light mode, otherwise dark
-            configs.schema = hasLightTrigger(text) ? 'light' : 'dark'
+            // r.schema dark|light|auto controls theme
+            configs.schema = getLastMatch(text, / r\.schema (dark|light|auto) /g) || 'auto'
             configs.font = `'${getLastMatch(text, / r\.font (.+?)  /g) || configs.font}'`
             configs.size = `${Math.max(
                 12,
@@ -140,9 +142,16 @@ export default function InfiniteCanvas() {
         }
 
         function updateConfigs() {
-            HTML.style.setProperty('--config-font', configs.font)
-            HTML.style.setProperty('--config-size', configs.size)
-            HTML.className = configs.schema === 'light' ? 'light' : 'dark'
+            HTML.style.cssText = `
+                --config-font: ${configs.font};
+                --config-size: ${configs.size};
+            `
+            HTML.className =
+                configs.schema === 'dark'
+                    ? 'dark'
+                    : configs.schema === 'light'
+                        ? 'light'
+                        : getSystemSchema()
             cm.refresh()
         }
 

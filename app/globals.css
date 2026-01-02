@@ -1,22 +1,8 @@
 @import "tailwindcss";
 
-/* Dark theme by default */
 :root {
-  --background: #0a0a0a;
-  --foreground: #e5e5e5;
-  --config-font: var(--font-geist-mono), 'Fira Code', 'SF Mono', monospace;
+  --config-font: 'Geist Mono', 'Fira Code Retina', 'Input Mono';
   --config-size: 14px;
-}
-
-html.dark {
-  --background: #0a0a0a;
-  --foreground: #e5e5e5;
-}
-
-/* Light theme only when "let there be light" is typed */
-html.light {
-  --background: #fafafa;
-  --foreground: #171717;
 }
 
 * {
@@ -25,17 +11,23 @@ html.light {
 
 html,
 body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
   height: 100%;
-  overflow: hidden;
-  background: var(--background);
-  color: var(--foreground);
+  padding: 0;
+  margin: 0;
+}
+
+html {
+  filter: saturate(0);
+  background: white;
+}
+
+html,
+.CodeMirror {
+  font-family: var(--config-font), monospace;
+  font-size: var(--config-size);
 }
 
 #editor {
-  width: 100%;
   height: 100%;
 }
 
@@ -43,10 +35,7 @@ body {
 .CodeMirror {
   width: 100% !important;
   height: 100% !important;
-  background: var(--background) !important;
-  color: var(--foreground) !important;
-  font-family: var(--config-font) !important;
-  font-size: var(--config-size) !important;
+  background: transparent !important;
   line-height: 1.6 !important;
   padding: 2rem;
 }
@@ -59,18 +48,6 @@ body {
   display: none !important;
 }
 
-.CodeMirror-cursor {
-  border-left: 2px solid var(--foreground) !important;
-}
-
-.CodeMirror-selected {
-  background: rgba(128, 128, 128, 0.3) !important;
-}
-
-.CodeMirror-focused .CodeMirror-selected {
-  background: rgba(100, 149, 237, 0.3) !important;
-}
-
 /* Hide scrollbars but allow scrolling */
 .CodeMirror-vscrollbar,
 .CodeMirror-hscrollbar {
@@ -81,40 +58,16 @@ body {
   min-width: 100% !important;
 }
 
-/* Ensure all CodeMirror elements follow theme */
-.CodeMirror-lines {
-  background: var(--background) !important;
-}
-
-.CodeMirror-line,
-.CodeMirror-line span,
-.CodeMirror pre.CodeMirror-line,
-.CodeMirror pre.CodeMirror-line-like {
-  background: var(--background) !important;
-  color: var(--foreground) !important;
-}
-
-.CodeMirror-linenumber {
-  color: var(--foreground) !important;
-  opacity: 0.3;
-}
-
-.CodeMirror-activeline-background {
-  background: var(--background) !important;
-}
-
-.CodeMirror-matchingbracket {
-  background: var(--background) !important;
-  color: var(--foreground) !important;
-  border-bottom: 1px solid var(--foreground);
-}
-
-/* Selection highlight */
-::selection {
-  background: rgba(100, 149, 237, 0.4);
-}
-
 /* Focus state */
 .CodeMirror:focus-within {
   outline: none;
+}
+
+/* Dark Mode */
+html.dark {
+  background: black;
+}
+
+.dark #editor>.CodeMirror {
+  filter: invert(1);
 }
