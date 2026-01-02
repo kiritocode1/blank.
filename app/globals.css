@@ -1,26 +1,92 @@
 @import "tailwindcss";
 
+/* Dark theme by default */
 :root {
-  --background: #ffffff;
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+  --config-font: var(--font-geist-mono), 'Fira Code', 'SF Mono', monospace;
+  --config-size: 14px;
+}
+
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #e5e5e5;
+}
+
+/* Light theme only when "let there be light" is typed */
+html.light {
+  --background: #fafafa;
   --foreground: #171717;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+#editor {
+  width: 100%;
+  height: 100%;
+}
+
+/* CodeMirror Overrides */
+.CodeMirror {
+  width: 100% !important;
+  height: 100% !important;
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  font-family: var(--config-font) !important;
+  font-size: var(--config-size) !important;
+  line-height: 1.6 !important;
+  padding: 2rem;
+}
+
+.CodeMirror-scroll {
+  overflow: auto !important;
+}
+
+.CodeMirror-gutters {
+  display: none !important;
+}
+
+.CodeMirror-cursor {
+  border-left: 2px solid var(--foreground) !important;
+}
+
+.CodeMirror-selected {
+  background: rgba(128, 128, 128, 0.3) !important;
+}
+
+.CodeMirror-focused .CodeMirror-selected {
+  background: rgba(100, 149, 237, 0.3) !important;
+}
+
+/* Hide scrollbars but allow scrolling */
+.CodeMirror-vscrollbar,
+.CodeMirror-hscrollbar {
+  display: none !important;
+}
+
+.CodeMirror-sizer {
+  min-width: 100% !important;
+}
+
+/* Selection highlight */
+::selection {
+  background: rgba(100, 149, 237, 0.4);
+}
+
+/* Focus state */
+.CodeMirror:focus-within {
+  outline: none;
 }
