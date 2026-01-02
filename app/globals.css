@@ -1,8 +1,20 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Highlighter';
+  src: url('/fonts/highlighter.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --config-font: 'Geist Mono', 'Fira Code Retina', 'Input Mono';
   --config-size: 14px;
+}
+
+/* Code block styling - uses special syntax highlighting font */
+.code-block {
+  font-family: 'Highlighter', monospace !important;
 }
 
 * {

@@ -165,6 +165,46 @@ export default function InfiniteCanvas() {
             cm.refresh()
         }
 
+        // Track code block markers
+        let codeMarkers: any[] = []
+
+        function markCodeBlocks() {
+            // Clear existing markers
+            codeMarkers.forEach((marker: any) => marker.clear())
+            codeMarkers = []
+
+            const text = cm.getValue()
+            const lines = text.split(EOL)
+            let inCodeBlock = false
+            let codeStartLine = -1
+            let codeStartCh = 0
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i]
+                const codeMatch = line.match(/code:\s*$/i)
+
+                if (codeMatch && !inCodeBlock) {
+                    // Found "code:" marker, start code block from next line
+                    inCodeBlock = true
+                    codeStartLine = i + 1
+                    codeStartCh = 0
+                } else if (inCodeBlock) {
+                    // Check if line is empty (just spaces) - end the code block
+                    if (line.trim() === '') {
+                        inCodeBlock = false
+                    } else {
+                        // Mark this line as code
+                        const marker = cm.markText(
+                            { line: i, ch: 0 },
+                            { line: i, ch: line.length },
+                            { className: 'code-block' }
+                        )
+                        codeMarkers.push(marker)
+                    }
+                }
+            }
+        }
+
         function onEnterPressed(cm: any) {
             const { line, ch } = cm.getCursor()
             const text = cm.getRange({ line, ch: 0 }, { line, ch })
@@ -254,6 +294,7 @@ export default function InfiniteCanvas() {
         const updateFillNow = () => {
             set(cm, fill(cm.getValue()))
             readConfigs()
+            markCodeBlocks()
         }
         const updateFill = throttle(updateFillNow)
 
@@ -318,6 +359,7 @@ export default function InfiniteCanvas() {
         cm.setCursor(START_CURSOR)
         cm.focus()
         readConfigs()
+        markCodeBlocks()
     }
 
     useEffect(() => {
