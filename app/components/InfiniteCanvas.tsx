@@ -16,7 +16,7 @@ const DEFAULT_VALUE = `
 `
 
 const DEFAULT_CONFIG = () => ({
-    schema: null as string | null,
+    schema: 'dark' as string,
     font: 'Geist Mono',
     size: '14',
 })
@@ -125,15 +125,15 @@ export default function InfiniteCanvas() {
         }
 
         function readConfigs(value?: string) {
-            value = value || cm.getValue()
+            const text = value ?? cm.getValue()
             configs = DEFAULT_CONFIG()
 
             // "let there be light" triggers light mode, otherwise dark
-            configs.schema = hasLightTrigger(value) ? 'light' : 'dark'
-            configs.font = `'${getLastMatch(value, / r\.font (.+?)  /g) || configs.font}'`
+            configs.schema = hasLightTrigger(text) ? 'light' : 'dark'
+            configs.font = `'${getLastMatch(text, / r\.font (.+?)  /g) || configs.font}'`
             configs.size = `${Math.max(
                 12,
-                +(getLastMatch(value, / r\.size ([\d.]+?) /g) || configs.size)
+                +(getLastMatch(text, / r\.size ([\d.]+?) /g) || configs.size)
             )}px`
 
             updateConfigs()
