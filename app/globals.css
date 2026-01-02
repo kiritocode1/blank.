@@ -81,6 +81,34 @@ body {
   min-width: 100% !important;
 }
 
+/* Ensure all CodeMirror elements follow theme */
+.CodeMirror-lines {
+  background: var(--background) !important;
+}
+
+.CodeMirror-line,
+.CodeMirror-line span,
+.CodeMirror pre.CodeMirror-line,
+.CodeMirror pre.CodeMirror-line-like {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+}
+
+.CodeMirror-linenumber {
+  color: var(--foreground) !important;
+  opacity: 0.3;
+}
+
+.CodeMirror-activeline-background {
+  background: var(--background) !important;
+}
+
+.CodeMirror-matchingbracket {
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border-bottom: 1px solid var(--foreground);
+}
+
 /* Selection highlight */
 ::selection {
   background: rgba(100, 149, 237, 0.4);
