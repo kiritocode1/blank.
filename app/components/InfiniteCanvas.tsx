@@ -5,13 +5,14 @@ import Script from 'next/script'
 
 const EOL = '\n'
 const SPACE = ' '
-const FONT_HEIGHT = 12
+const FONT_HEIGHT = 16
 const FONT_WIDTH = 6
 const STORE_TEXT = 'blank-editor'
 const STORE_CURSOR = 'blank-editor-cursor'
+const LIGHT_TRIGGER = 'let there be light'
 
 const DEFAULT_VALUE = `
-   blank.
+   blank page.
 `
 
 const DEFAULT_CONFIG = () => ({
@@ -38,6 +39,10 @@ function fill(text: string): string {
     }
 
     return result.join(EOL)
+}
+
+function hasLightTrigger(value: string): boolean {
+    return value.toLowerCase().includes(LIGHT_TRIGGER)
 }
 
 function getLastMatch(value: string, re: RegExp): string | null {
@@ -130,8 +135,13 @@ export default function InfiniteCanvas() {
             const text = value ?? cm.getValue()
             configs = DEFAULT_CONFIG()
 
-            // r.schema dark|light|auto controls theme
-            configs.schema = getLastMatch(text, / r\.schema (dark|light|auto) /g) || 'auto'
+            // "let there be light" triggers light mode, r.schema overrides
+            const schemaCmd = getLastMatch(text, / r\.schema (dark|light|auto) /g)
+            if (schemaCmd) {
+                configs.schema = schemaCmd
+            } else {
+                configs.schema = hasLightTrigger(text) ? 'light' : 'dark'
+            }
             configs.font = `'${getLastMatch(text, / r\.font (.+?)  /g) || configs.font}'`
             configs.size = `${Math.max(
                 12,
